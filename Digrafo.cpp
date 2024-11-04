@@ -1,5 +1,5 @@
 /*
- * Tarefa 01 - Digrafo - Listas de Adjacencia
+ * Tarefa 02 - Alteracoes de Transito
  *
  * GEN254 - Digrafos - 2024/2
  *

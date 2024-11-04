@@ -1,5 +1,5 @@
 /*
- * Tarefa 01 - Grafo - Listas de Adjacencia
+ * Tarefa 02 - Alteracoes de Transito
  *
  * GEN254 - Grafos - 2024/2
  *
