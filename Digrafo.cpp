@@ -27,22 +27,22 @@ Digrafo::Digrafo(int num_vertices){
 
 void Digrafo::insere_aresta(Aresta e, int d){
     if (!existe_aresta(e) && e.v1 != e.v2 && d == 2){
-        lista_adj_ [ e.v1 ].push_back(e.v2);
-        lista_adj_ [ e.v2 ].push_back(e.v1);
+        lista_adj_ [e.v1].push_back(e.v2);
+        lista_adj_ [e.v2].push_back(e.v1);
         num_arestas_++;
     }
     else if (!existe_aresta(e) && e.v1 != e.v2 && d == 1){
-        lista_adj_ [ e.v1 ].push_back(e.v2);
+        lista_adj_ [e.v1].push_back(e.v2);
     }
 }
 
 bool Digrafo::existe_aresta(Aresta e){
-    for (int adj : lista_adj_ [ e.v1 ]){
+    for (int adj : lista_adj_ [e.v1]){
         if (adj == e.v2){
             return true;
         }
     }
-    for (int adj : lista_adj_ [ e.v2 ]){
+    for (int adj : lista_adj_ [e.v2]){
         if (adj == e.v1){
             return true;
         }
@@ -63,6 +63,24 @@ void Digrafo::imprime_digrafo(){
         cout << endl;
     }
 }
+
+void Digrafo::componentes_fortemente_conexas(){
+    std::stack<int> pilha;
+    std::vector<bool> visitado(num_vertices_, false);
+
+    for (int i = 0; i < num_vertices_; i++){
+        if (!visitado [i]){
+            busca_profundidade_original(i, pilha, visitado);
+        }
+    }
+    Digrafo invertido = digrafo_invetido();
+    std::stack<int> pilhai;
+    std::vector<bool> visitadoi(num_vertices_, false);
+    while (!pilhai.empty())
+    //continuar
+    
+}
+
 
 /*
 1. Faça i = 0
