@@ -24,8 +24,8 @@ public:
     void insere_aresta(Aresta e, int d);
     bool existe_aresta(Aresta e);
     void imprime_digrafo();
-    void busca_profundidade_original(int v, std::vector<bool> &visitado, std::stack<int> &pilha);
-    void busca_profundidade_invertido(int v, std::vector<bool> &visitado, std::vector<int> &componente);
+    void busca_profundidade_original(int v);
+    void busca_profundidade_invertido(int v);
     void componentes_fortemente_conexas();
     Digrafo digrafo_invetido();
 
