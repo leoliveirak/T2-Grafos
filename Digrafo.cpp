@@ -63,3 +63,16 @@ void Digrafo::imprime_digrafo(){
         cout << endl;
     }
 }
+
+/*
+1. Faça i = 0
+2. Enquanto houver vértices não visitados no digrafo G:
+3. Realize uma busca em profundidade no digrafo G começando por um vértice não
+visitado; quando um vértice v e seus vizinhos de saída tiverem sido visitados, faça fin(v)
+= i e i = i + 1
+4. Construa o digrafo G’ dado pelo digrafo G com as direções das arestas de G invertidas
+5. Enquanto houver vértices não visitados no digrafo G’:
+6. Realize uma busca em profundidade no digrafo G’ começando por um vértice não
+visitado v para o qual fin(v) seja máximo
+*/
+
