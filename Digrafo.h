@@ -24,10 +24,11 @@ public:
     void insere_aresta(Aresta e, int d);
     bool existe_aresta(Aresta e);
     void imprime_digrafo();
-    void busca_profundidade_original(int v, std::stack<int>& pilha, std::vector<bool>& visitado);
-    void busca_profundidade_invertido(int v, std::vector<bool>& visitado, std::vector<int>& componente);
+    void Busca_Profundidade(int v, std::stack<int>& pilha, std::vector<bool>& visitado);
+    void Digrafo::busca_profundidade_invertido(int v, vector<bool>& visitado, vector<int>& componente);
     void componentes_fortemente_conexas();
-    Digrafo digrafo_invetido();
+    Digrafo Digrafo::digrafo_invertido();
+    
 
 private:
     int num_vertices_;
