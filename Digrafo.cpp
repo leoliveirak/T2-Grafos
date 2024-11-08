@@ -17,8 +17,8 @@
 
 using namespace std;
 
-Digrafo::Digrafo(int num_vertices) {
-    if (num_vertices <= 0) {
+Digrafo::Digrafo(int num_vertices){
+    if (num_vertices <= 0){
         throw invalid_argument("Erro na construcao do Digrafo, o numero de vertices eh invalido");
     }
     num_vertices_ = num_vertices;
@@ -26,45 +26,44 @@ Digrafo::Digrafo(int num_vertices) {
     lista_adj_.resize(num_vertices_);
 }
 
-void Digrafo::insere_aresta(Aresta e, int d) {
-    if (!existe_aresta(e) && e.v1 != e.v2 && d == 2) {
-        lista_adj_[e.v1].push_back(e.v2);
-        lista_adj_[e.v2].push_back(e.v1);
+void Digrafo::insere_aresta(Aresta e, int d){
+    if (!existe_aresta(e) && e.v1 != e.v2 && d == 2){
+        lista_adj_ [e.v1].push_back(e.v2);
+        lista_adj_ [e.v2].push_back(e.v1);
         num_arestas_++;
-    } else if (!existe_aresta(e) && e.v1 != e.v2 && d == 1) {
-        lista_adj_[e.v1].push_back(e.v2);
+    }
+    else if (!existe_aresta(e) && e.v1 != e.v2 && d == 1){
+        lista_adj_ [e.v1].push_back(e.v2);
         num_arestas_++;
     }
 }
 
-bool Digrafo::existe_aresta(Aresta e) {
-    for (int adj : lista_adj_[e.v1]) {
-        if (adj == e.v2) {
+bool Digrafo::existe_aresta(Aresta e){
+    for (int adj : lista_adj_ [e.v1]){
+        if (adj == e.v2){
             return true;
         }
     }
     return false;
 }
 
-int Digrafo::num_arestas() { return num_arestas_; }
+int Digrafo::num_arestas(){ return num_arestas_; }
 
-void Digrafo::imprime_digrafo() {
-    for (int i = 0; i < num_vertices_; i++) {
+void Digrafo::imprime_digrafo(){
+    for (int i = 0; i < num_vertices_; i++){
         cout << i << ": ";
-        for (int j : lista_adj_[i]) {
+        for (int j : lista_adj_ [i]){
             cout << j << " ";
         }
         cout << endl;
     }
 }
 
-void Digrafo::Busca_Profundidade(int v, stack<int>& pilha, vector<bool>& visitado) {
-    visitado[v] = true; // recebe o vértice e marca como visitado;
+void Digrafo::Busca_Profundidade(int v, stack<int>& pilha, vector<bool>& visitado){
+    visitado [v] = true; // recebe o vértice e marca como visitado;
 
-    for (int u : lista_adj_[v]) // Executa o processo |d⁺(v)| vezes 
-    {
-        if (!visitado[u]) // percorre até achar um vértice não visitado;
-        {
+    for (int u : lista_adj_ [v]){ // Executa o processo |d⁺(v)| vezes 
+        if (!visitado [u]){ // percorre até achar um vértice não visitado;
             Busca_Profundidade(u, pilha, visitado); // Realiza o mesmo processo recursivamente.
         }
     }
@@ -72,36 +71,36 @@ void Digrafo::Busca_Profundidade(int v, stack<int>& pilha, vector<bool>& visitad
     pilha.push(v); // Adiciona os elementos na pilha 
 }
 
-void Digrafo::busca_profundidade_invertido(int v, vector<bool>& visitado, vector<int>& componente) {
-    visitado[v] = true;
+void Digrafo::busca_profundidade_invertido(int v, vector<bool>& visitado, vector<int>& componente){
+    visitado [v] = true;
     componente.push_back(v);
 
-    for (int u : lista_adj_[v]) {
-        if (!visitado[u]) {
+    for (int u : lista_adj_ [v]){
+        if (!visitado [u]){
             busca_profundidade_invertido(u, visitado, componente);
         }
     }
 }
 
-Digrafo Digrafo::digrafo_invertido() {
+Digrafo Digrafo::digrafo_invertido(){
     Digrafo invertido(num_vertices_);
 
-    for (int v = 0; v < num_vertices_; v++) {
-        for (int u : lista_adj_[v]) {
-            invertido.lista_adj_[u].push_back(v);
+    for (int v = 0; v < num_vertices_; v++){
+        for (int u : lista_adj_ [v]){
+            invertido.lista_adj_ [u].push_back(v);
         }
     }
 
     return invertido;
 }
-/* AINDA EM TESTES
-void Digrafo::componentes_fortemente_conexas() {
+//AINDA EM TESTES
+void Digrafo::componentes_fortemente_conexas(){
     stack<int> pilha;
     vector<bool> visitado(num_vertices_, false);
 
     // Passo 1: Realizar DFS no grafo original e empilhar vértices pela ordem de término
-    for (int i = 0; i < num_vertices_; i++) {
-        if (!visitado[i]) {
+    for (int i = 0; i < num_vertices_; i++){
+        if (!visitado [i]){
             Busca_Profundidade(i, pilha, visitado);
         }
     }
@@ -113,25 +112,39 @@ void Digrafo::componentes_fortemente_conexas() {
     fill(visitado.begin(), visitado.end(), false);  // Resetar o vetor de visitados
 
     int componente_index = 0;
-    while (!pilha.empty()) {
+    vector<vector<int>> componentes;
+    vector<int> map_componentes(num_vertices_);
+    while (!pilha.empty()){
         int v = pilha.top();
         pilha.pop();
 
-        if (!visitado[v]) {
+        if (!visitado [v]){
             vector<int> componente;
             invertido.busca_profundidade_invertido(v, visitado, componente);
 
             // Imprime a componente fortemente conexa encontrada
             cout << componente_index++ << ": ";
-            for (int u : componente) {
+            int comp_index = componentes.size();
+            for (int u : componente){
                 cout << u << " ";
+                map_componentes [u] = comp_index;
             }
             cout << endl;
+            componentes.push_back(componente);
         }
     }
-}
 
-*/
+    //calcula o grau de saída de cada componente fortemente conexa
+    vector<int> grau_saida(componentes.size(), 0);
+    for (int i = 0; i < num_vertices_; i++){
+        for (int v : lista_adj_ [i]){
+            if (map_componentes [i] != map_componentes [v]){
+                grau_saida [map_componentes [i]]++;
+            }
+        }
+    }
+
+}
 
 /*
 1. Faça i = 0
@@ -139,7 +152,9 @@ void Digrafo::componentes_fortemente_conexas() {
 3. Realize uma busca em profundidade no digrafo G começando por um vértice não
 visitado; quando um vértice v e seus vizinhos de saída tiverem sido visitados, faça fin(v)
 = i e i = i + 1
+
 4. Construa o digrafo G’ dado pelo digrafo G com as direções das arestas de G invertidas
+
 5. Enquanto houver vértices não visitados no digrafo G’:
 6. Realize uma busca em profundidade no digrafo G’ começando por um vértice não
 visitado v para o qual fin(v) seja máximo
