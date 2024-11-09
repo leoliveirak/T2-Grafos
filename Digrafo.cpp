@@ -31,6 +31,7 @@ void Digrafo::insere_aresta(Aresta e, int d){
         lista_adj_ [e.v1].push_back(e.v2);
         lista_adj_ [e.v2].push_back(e.v1);
         num_arestas_++;
+        num_arestas_++;
     }
     else if (!existe_aresta(e) && e.v1 != e.v2 && d == 1){
         lista_adj_ [e.v1].push_back(e.v2);
@@ -144,6 +145,13 @@ void Digrafo::componentes_fortemente_conexas(){
         }
     }
 
+    for (int i = 0; i < componentes.size(); i++){
+        cout << "Componente " << i << " (grau de saída: " << grau_saida [i] << "): ";
+        for(int v : componentes[i]){
+            cout << v << " ";
+        }
+        cout << endl;
+    }
 }
 
 /*

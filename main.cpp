@@ -22,9 +22,7 @@ int main(){
   int X; // Vértice X;
   int Y; // Vértice Y;
   int S; // Direção.
-
-  cin >> P >> D;
-
+  
 //##############################//
 
   cin >> P >> D; // Valores de controle.
