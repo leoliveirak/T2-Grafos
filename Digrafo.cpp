@@ -137,17 +137,22 @@ void Digrafo::componentes_fortemente_conexas(){
 
     //calcula o grau de saída de cada componente fortemente conexa
     vector<int> grau_saida(componentes.size(), 0);
+    vector<bool> comp_visitada(componentes.size(), false);
     for (int i = 0; i < num_vertices_; i++){
         for (int v : lista_adj_ [i]){
-            if (map_componentes [i] != map_componentes [v]){
+            if (map_componentes [i] != map_componentes [v] && !comp_visitada [map_componentes [v]]){
                 grau_saida [map_componentes [i]]++;
+                comp_visitada [map_componentes [v]] = true;
             }
+        }
+        for(int v : lista_adj_[i]){
+            visitado[map_componentes[v]] = false;
         }
     }
 
     for (int i = 0; i < componentes.size(); i++){
         cout << "Componente " << i << " (grau de saída: " << grau_saida [i] << "): ";
-        for(int v : componentes[i]){
+        for (int v : componentes [i]){
             cout << v << " ";
         }
         cout << endl;
