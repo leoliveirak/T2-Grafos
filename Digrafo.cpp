@@ -50,16 +50,6 @@ bool Digrafo::existe_aresta(Aresta e){
 
 int Digrafo::num_arestas(){ return num_arestas_; }
 
-void Digrafo::imprime_digrafo(){
-    for (int i = 0; i < num_vertices_; i++){
-        cout << i << ": ";
-        for (int j : lista_adj_ [i]){
-            cout << j << " ";
-        }
-        cout << endl;
-    }
-}
-
 void Digrafo::Busca_Profundidade(int v, stack<int>& pilha, vector<bool>& visitado){
     visitado [v] = true; // recebe o vértice e marca como visitado;
 
@@ -112,7 +102,6 @@ void Digrafo::componentes_fortemente_conexas(){
     // Passo 3: Realizar DFS no grafo invertido pela ordem dos vértices da pilha
     fill(visitado.begin(), visitado.end(), false);  // Resetar o vetor de visitados
 
-    int componente_index = 0;
     vector<vector<int>> componentes;
     vector<int> map_componentes(num_vertices_);
     while (!pilha.empty()){
@@ -123,14 +112,10 @@ void Digrafo::componentes_fortemente_conexas(){
             vector<int> componente;
             invertido.busca_profundidade_invertido(v, visitado, componente);
 
-            // Imprime a componente fortemente conexa encontrada
-            cout << componente_index++ << ": ";
             int comp_index = componentes.size();
             for (int u : componente){
-                cout << u << " ";
                 map_componentes [u] = comp_index;
             }
-            cout << endl;
             componentes.push_back(componente);
         }
     }
@@ -145,16 +130,13 @@ void Digrafo::componentes_fortemente_conexas(){
                 comp_visitada [map_componentes [v]] = true;
             }
         }
-        for(int v : lista_adj_[i]){
-            visitado[map_componentes[v]] = false;
+        for (int v : lista_adj_ [i]){
+            visitado [map_componentes [v]] = false;
         }
     }
 
     for (int i = 0; i < componentes.size(); i++){
-        cout << "Componente " << i << " (grau de saída: " << grau_saida [i] << "): ";
-        for (int v : componentes [i]){
-            cout << v << " ";
-        }
+        cout << i << ": " << grau_saida [i];
         cout << endl;
     }
 }
