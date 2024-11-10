@@ -48,24 +48,19 @@ bool Digrafo::existe_aresta(Aresta e){
     return false;
 }
 
-int Digrafo::num_arestas(){ return num_arestas_; }
-
 void Digrafo::Busca_Profundidade(int v, stack<int>& pilha, vector<bool>& visitado){
     visitado [v] = true; // recebe o vértice e marca como visitado;
-
     for (int u : lista_adj_ [v]){ // Executa o processo |d⁺(v)| vezes 
         if (!visitado [u]){ // percorre até achar um vértice não visitado;
             Busca_Profundidade(u, pilha, visitado); // Realiza o mesmo processo recursivamente.
         }
     }
-
     pilha.push(v); // Adiciona os elementos na pilha 
 }
 
 void Digrafo::busca_profundidade_invertido(int v, vector<bool>& visitado, vector<int>& componente){
     visitado [v] = true;
     componente.push_back(v);
-
     for (int u : lista_adj_ [v]){
         if (!visitado [u]){
             busca_profundidade_invertido(u, visitado, componente);
@@ -75,43 +70,36 @@ void Digrafo::busca_profundidade_invertido(int v, vector<bool>& visitado, vector
 
 Digrafo Digrafo::digrafo_invertido(){
     Digrafo invertido(num_vertices_);
-
     for (int v = 0; v < num_vertices_; v++){
         for (int u : lista_adj_ [v]){
             invertido.lista_adj_ [u].push_back(v);
         }
     }
-
     return invertido;
 }
-//AINDA EM TESTES
+
 void Digrafo::componentes_fortemente_conexas(){
     stack<int> pilha;
     vector<bool> visitado(num_vertices_, false);
 
-    // Passo 1: Realizar DFS no grafo original e empilhar vértices pela ordem de término
+    // Realizar busca profundidade no grafo original e empilhar vértices pela ordem de término
     for (int i = 0; i < num_vertices_; i++){
         if (!visitado [i]){
             Busca_Profundidade(i, pilha, visitado);
         }
     }
-
-    // Passo 2: Criar o grafo invertido
+    // Criar o grafo invertido
     Digrafo invertido = digrafo_invertido();
 
-    // Passo 3: Realizar DFS no grafo invertido pela ordem dos vértices da pilha
     fill(visitado.begin(), visitado.end(), false);  // Resetar o vetor de visitados
-
     vector<vector<int>> componentes;
     vector<int> map_componentes(num_vertices_);
     while (!pilha.empty()){
         int v = pilha.top();
         pilha.pop();
-
         if (!visitado [v]){
             vector<int> componente;
             invertido.busca_profundidade_invertido(v, visitado, componente);
-
             int comp_index = componentes.size();
             for (int u : componente){
                 map_componentes [u] = comp_index;
@@ -119,8 +107,7 @@ void Digrafo::componentes_fortemente_conexas(){
             componentes.push_back(componente);
         }
     }
-
-    //calcula o grau de saída de cada componente fortemente conexa
+    //Calcula o grau de saída de cada componente fortemente conexa
     vector<int> grau_saida(componentes.size(), 0);
     vector<bool> comp_visitada(componentes.size(), false);
     for (int i = 0; i < num_vertices_; i++){
@@ -134,24 +121,8 @@ void Digrafo::componentes_fortemente_conexas(){
             visitado [map_componentes [v]] = false;
         }
     }
-
     for (int i = 0; i < componentes.size(); i++){
         cout << i << ": " << grau_saida [i];
         cout << endl;
     }
 }
-
-/*
-1. Faça i = 0
-2. Enquanto houver vértices não visitados no digrafo G:
-3. Realize uma busca em profundidade no digrafo G começando por um vértice não
-visitado; quando um vértice v e seus vizinhos de saída tiverem sido visitados, faça fin(v)
-= i e i = i + 1
-
-4. Construa o digrafo G’ dado pelo digrafo G com as direções das arestas de G invertidas
-
-5. Enquanto houver vértices não visitados no digrafo G’:
-6. Realize uma busca em profundidade no digrafo G’ começando por um vértice não
-visitado v para o qual fin(v) seja máximo
-*/
-
