@@ -15,7 +15,6 @@
 #include <vector>
 #include <stack>
 
-
 using namespace std;
 
 Digrafo::Digrafo(int num_vertices){
@@ -60,11 +59,11 @@ void Digrafo::Busca_Profundidade(int v, stack<int>& pilha, vector<bool>& visitad
 }
 
 void Digrafo::busca_profundidade_invertido(int v, vector<bool>& visitado, vector<int>& componente){
-    visitado [v] = true; // recebe o vértice e marca como visitado;
-    componente.push_back(v); // manda pro fim do vector;
-    for (int u : lista_adj_ [v]){ // Executa o processo |d⁺(v)| vezes
-        if (!visitado [u]){ // percorre até achar um vértice não visitado;
-            busca_profundidade_invertido(u, visitado, componente); // Realiza o mesmo processo recursivamente.
+    visitado [v] = true;
+    componente.push_back(v);
+    for (int u : lista_adj_ [v]){
+        if (!visitado [u]){
+            busca_profundidade_invertido(u, visitado, componente);
         }
     }
 }
@@ -78,26 +77,26 @@ Digrafo Digrafo::digrafo_invertido(){
     }
     return invertido;
 }
-/*
+
 void Digrafo::componentes_fortemente_conexas() {
     stack<int> pilha;
     vector<bool> visitado(num_vertices_, false);
 
-    // Passo 1: Realizar busca em profundidade no grafo original e empilhar vértices pela ordem de término
+    // Realizar busca em profundidade no grafo original e empilhar vértices pela ordem de término
     for (int i = 0; i < num_vertices_; i++) {
         if (!visitado[i]) {
             Busca_Profundidade(i, pilha, visitado);
         }
     }
 
-    // Passo 2: Criar o grafo invertido
+    // Criar o grafo invertido
     Digrafo invertido = digrafo_invertido();
 
     fill(visitado.begin(), visitado.end(), false);  // Resetar o vetor de visitados
     vector<vector<int>> componentes;
     vector<int> map_componentes(num_vertices_);
-
-    // Passo 3: Encontrar componentes fortemente conexas
+    
+    // Executar busca em profundidade no grafo invertido para identificar as componentes
     while (!pilha.empty()) {
         int v = pilha.top();
         pilha.pop();
@@ -112,68 +111,25 @@ void Digrafo::componentes_fortemente_conexas() {
         }
     }
 
-    // Passo 4: Calcular o grau de saída de cada componente fortemente conexa
+    // Construir o grafo das componentes e calcular o grau de saída
+    Digrafo grafo_componentes(componentes.size());
     vector<int> grau_saida(componentes.size(), 0);
+
     for (int i = 0; i < num_vertices_; i++) {
-        int comp_i = map_componentes[i];
         for (int v : lista_adj_[i]) {
-            int comp_v = map_componentes[v];
-            if (comp_i != comp_v) {
-                grau_saida[comp_i]++;
+            int comp_origem = map_componentes[i];
+            int comp_destino = map_componentes[v];
+            // Incrementar o grau de saída se a aresta conecta componentes diferentes
+            if (comp_origem != comp_destino) {
+                Aresta nova_aresta(comp_origem, comp_destino);
+                if (!grafo_componentes.existe_aresta(nova_aresta)) {
+                    grafo_componentes.insere_aresta(nova_aresta, 1);
+                    grau_saida[comp_origem]++;
+                }
             }
         }
     }
-
-    // Passo 5: Exibir o grau de saída de cada componente fortemente conexa
-    for (int i = 0; i < componentes.size(); i++) {
-        cout << i << ": " << grau_saida[i] << endl;
-    }
-}*///4 5 9 16
-void Digrafo::componentes_fortemente_conexas(){
-    stack<int> pilha;
-    vector<bool> visitado(num_vertices_, false);
-
-    // Realizar busca profundidade no grafo original e empilhar vértices pela ordem de término
-    for (int i = 0; i < num_vertices_; i++){
-        if (!visitado [i]){
-            Busca_Profundidade(i, pilha, visitado);
-        }
-    }
-    // Criar o grafo invertido
-    Digrafo invertido = digrafo_invertido();
-
-    fill(visitado.begin(), visitado.end(), false);  // Resetar o vetor de visitados
-    vector<vector<int>> componentes;
-    vector<int> map_componentes(num_vertices_);
-    while (!pilha.empty()){
-        int v = pilha.top();
-        pilha.pop();
-        if (!visitado [v]){
-            vector<int> componente;
-            invertido.busca_profundidade_invertido(v, visitado, componente);
-            int comp_index = componentes.size();
-            for (int u : componente){
-                map_componentes [u] = comp_index;
-            }
-            componentes.push_back(componente);
-        }
-    }
-    //Calcula o grau de saída de cada componente fortemente conexa
-    vector<int> grau_saida(componentes.size(), 0);
-    vector<bool> comp_visitada(componentes.size(), false);
-    for (int i = 0; i < num_vertices_; i++){
-        for (int v : lista_adj_ [i]){
-            if (map_componentes [i] != map_componentes [v] && !comp_visitada [map_componentes [v]]){
-                grau_saida [map_componentes [i]]++;
-                comp_visitada [map_componentes [v]] = true;
-            }
-        }
-        for (int v : lista_adj_ [i]){
-            visitado [map_componentes [v]] = false;
-        }
-    }
-    for (int i = 0; i < componentes.size(); i++){
-        cout << i << ": " << grau_saida [i];
-        cout << endl;
+    for (int i = 0; i < grau_saida.size(); i++) {
+        cout << i << ": " << grau_saida[i] << " " << endl;
     }
 }
